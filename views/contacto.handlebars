@@ -1,1 +1,51 @@
-<h1>Acá voy a poner el formulario de contacto!</h1>
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Formulario HTML</title>
+	</head>
+	<body class="container">
+		<h1>Formulario HTML</h1>
+
+		<form action="enviar" method="post" enctype="multipart/form-data"> <!--enctype="multipart/form-data" permite enviar texto e imagenes/archivos-->
+
+			<label for="nombre">Ingrese su nombre:</label>
+			<input class="form-control" type="text" name="nombre" placeholder="Ej: Obi Juan">
+			
+			<br>
+
+			<label for="apellido">Ingrese su apellido:</label>
+			<input class="form-control" type="text" name="apellido" placeholder="Ej: Kenobi">
+
+			<br>
+
+			<label for="correo">Ingrese su E-Mail:</label>
+			<input class="form-control" type="email" name="correo" placeholder="Ej: obi.juan@jedi.com">
+
+			<br>
+
+			<label for="asunto">Elija su asunto:</label>
+			<select class="form-control" name="asunto">
+				<option value="1">Consulta</option>
+				<option value="2">Pedido</option>
+				<option value="3">Sugerencia</option>
+				<option value="4">Reclamo</option>
+			</select>
+
+			<br>
+
+			<label for="mensaje">Ingrese su mensaje:</label>
+			<textarea class="form-control" name="mensaje" cols="26" rows="6" placeholder="Max: 100 caracteres"></textarea>
+
+			<br>
+
+			<label for="archivo">Ingrese su archivo:</label>
+			<input class="form-control" type="file" name="archivo" placeholder="Arrastre el archivo aquí">
+
+			<br>
+
+			<input class="btn btn-primary" type="submit" value="Enviar">
+
+		</form>
+	</body>
+</html>
