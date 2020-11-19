@@ -1,21 +1,13 @@
 <!DOCTYPE html>
-    <html>
-        <head>
-            <meta charset="utf-8">
-            <title>Example App</title>
-            <style>
-                body{
-                    font-weight: bold;
-                    text-align: center;
-                    font-family: serif;
-                }
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>BNJS - {{titulo}}</title> <!--ENVUELTO EN DOS BIGOTES UNE PLANTILLA CON VARIABLE/CONSTANTE-->
+        <link rel="stylesheet" href="/css/style.css">
+    </head>
+    <body>
 
+        {{{body}}} <!-- TRES BIGOTES SON PARA UNIR ESTA PLANTILLA CON UNA DE VIEWS-->
 
-            </style>
-        </head>
-        <body>
-
-            {{{body}}}
-
-        </body>
-    </html>
+    </body>
+</html>
