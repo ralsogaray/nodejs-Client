@@ -1,5 +1,6 @@
 const express = require('express')
 const exphbs  = require('express-handlebars')
+const axios = require('axios') 
 
 const app = express()
 
@@ -17,6 +18,16 @@ app.listen(port)
 app.use(express.static('public')) //<--- PRIMERO SE BUSCA SI LA RESPUESTA SE PUEDE OBTTENER DE PUBLIC, sino vuelve a la aplicación
 // MIDDLEWARE ----
 
+
+app.get("/test", async (req, res)=>{ 
+
+    const { data : peliculas } = await axios.get('http://localhost:1000/api/v1/pelicula/') //extraigo data de la peticion
+    // extrae data y renombra la variable como "peliculas"
+    
+    //console.log( peliculas )
+    console.table( peliculas )
+    res.end("Mirá la consola a ver si hay datos de la API")
+})
 
 app.get('/:seccion?', (req, res) => { //seccion es como el parametro :id --- al poner '?' se ultizia para que si no pongo ninguna ruta en el navegador, seccion quedará vacío y arroja/devuelve "undefined"
 
@@ -36,3 +47,4 @@ app.get('/:seccion?', (req, res) => { //seccion es como el parametro :id --- al 
 
     //al pedir que me renderize el primer parametro, el motor va a buscar en views si hay una vista con nombre que coincida. Si existe toma el contenido y va hacia el layout main y lo imprime sobre body, luego toma todo el main y lo devuelve al navegador.
 }) 
+
