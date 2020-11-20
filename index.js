@@ -15,10 +15,12 @@ app.listen(port)
 
 
 // MIDDLEWARE ----
-app.use(express.static('public')) //<--- PRIMERO SE BUSCA SI LA RESPUESTA SE PUEDE OBTTENER DE PUBLIC, sino vuelve a la aplicación
+app.use( express.static('public') ) //<--- PRIMERO SE BUSCA SI LA RESPUESTA SE PUEDE OBTTENER DE PUBLIC, sino vuelve a la aplicación
+app.use( express.json() ) 
+app.use (express.urlencoded({ extended : true }) )
 // MIDDLEWARE ----
 
-
+////////// AXIOS //////////
 app.get("/test", async (req, res)=>{ 
 
     const { data : peliculas } = await axios.get('http://localhost:1000/api/v1/pelicula/') //extraigo data de la peticion
@@ -37,6 +39,25 @@ app.get("/panel", async (req, res) => {
     res.render('panel', { titulo : "Catálogo de Películas", peliculas : peliculas })
 })
 
+app.get("/panel/nueva", (req, res) =>{
+    res.render('formulario')
+})
+
+app.post("/panel/nueva", async (req, res) => {
+    
+    const { body : datos } = req
+
+    const { data } = await axios({ //data es la respuesta de dialogar con el servidor
+        method : "POST",
+        url : 'http://localhost:1000/api/v1/pelicula/',
+        data : datos
+    })
+
+    console.log( data )
+
+    res.end("Mira la consolita!")
+})
+///////// AXIOS //////////
 
 app.get("/favicon.ico", (req, res) => {
     res.writeHead(404, { "Content-Type" : "text/plain"})
