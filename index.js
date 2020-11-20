@@ -29,6 +29,22 @@ app.get("/test", async (req, res)=>{
     res.end("Mirá la consola a ver si hay datos de la API")
 })
 
+app.get("/panel", async (req, res) => {
+    const { data : peliculas } = await axios.get('http://localhost:1000/api/v1/pelicula/') //extraigo data de la peticion
+    
+    console.table( peliculas )
+    
+    res.render('panel', { titulo : "Catálogo de Películas", peliculas : peliculas })
+})
+
+
+app.get("/favicon.ico", (req, res) => {
+    res.writeHead(404, { "Content-Type" : "text/plain"})
+    res.end("CHROME JA'JODÉ CON FAVICON.ICO")
+})
+
+
+
 app.get('/:seccion?', (req, res) => { //seccion es como el parametro :id --- al poner '?' se ultizia para que si no pongo ninguna ruta en el navegador, seccion quedará vacío y arroja/devuelve "undefined"
 
     const{ seccion } = req.params //extraigo el parametro seccion enviado por la peticion http
