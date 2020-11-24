@@ -20,10 +20,17 @@ app.use( express.json() )
 app.use (express.urlencoded({ extended : true }) )
 // MIDDLEWARE ----
 
+
+
+
+
+
+
+
 ////////// AXIOS //////////
 app.get("/test", async (req, res)=>{ 
 
-    const { data : peliculas } = await axios.get('http://localhost:1000/api/v1/pelicula/') //extraigo data de la peticion
+    const { data : peliculas } = await axios.get('http://localhost:1000/api/v1/pelicula/') // me conecto a la API de la otra aplicacion y extraigo "data" y las peliculas de dicha data. 
     // extrae data y renombra la variable como "peliculas"
     
     //console.log( peliculas )
@@ -33,32 +40,64 @@ app.get("/test", async (req, res)=>{
 
 app.get("/panel", async (req, res) => {
     const { data : peliculas } = await axios.get('http://localhost:1000/api/v1/pelicula/') //extraigo data de la peticion
-    
+    // extrae data y renombra la variable como "peliculas"
+
     console.table( peliculas )
     
-    res.render('panel', { titulo : "Catálogo de Películas", peliculas : peliculas })
+    res.render('panel', { titulo : "Catálogo de Películas", peliculas : peliculas }) //en el objeto defino propiedades/valores qde informacion que quiero que ingrese a panel
 })
 
 app.get("/panel/nueva", (req, res) =>{
-    res.render('formulario')
-})
+    res.render('formulario', { accion : "Agregar"}) //RENDERIZA EL FORMULARIO DE VIEWS PARA ENVIAR PELICULAS
+}) 
 
-app.post("/panel/nueva", async (req, res) => {
-    
-    const { body : datos } = req
+app.post("/panel/nueva", async (req, res) => { // POOOOOST 
+    // aca habria que hacer la validacion de datos con "Joi"
+    const { body : datos } = req //EXTRAIGO DE REQUEST BODY Y RENOMBRO LA VARIABLE COMO "datos"
 
-    const { data } = await axios({ //data es la respuesta de dialogar con el servidor
+    const { data } = await axios({ //data es la respuesta de dialogar con el servidor. Siempre que haga una operacion con axios se va a extraer la propiedad "data"
         method : "POST",
-        url : 'http://localhost:1000/api/v1/pelicula/',
-        data : datos
+        url : 'http://localhost:1000/api/v1/pelicula/', //direccion a donde mandar el POST
+        data : datos 
     })
 
     console.log( data )
 
     res.end("Mira la consolita!")
 })
+
+app.get("/panel/actualizar/:id", async (req, res) =>{
+
+    const { id } = req.params
+
+    
+
+    const { data } = await axios.get(`http://localhost:1000/api/v1/pelicula/${id}`)
+
+    console.log(data)
+    if(data.ok){
+        
+        const pelicula = data.resultado[0] //dentro de pelicula esta el objeto pelicula con id, titulo, estreno y genero
+        
+        res.render('formulario', {//RENDERIZA EL FORMULARIO DE VIEWS PARA ENVIAR PELICULAS
+            accion : "Actualizar", 
+            ...pelicula}) //destructurador
+    } else{
+        res.redirect("/panel/error") //luego crear una interfaz que diga error
+    }
+
+    
+}) 
 ///////// AXIOS //////////
 
+
+
+
+
+
+
+
+// para que chrome no moleste con favicon.ico 
 app.get("/favicon.ico", (req, res) => {
     res.writeHead(404, { "Content-Type" : "text/plain"})
     res.end("CHROME JA'JODÉ CON FAVICON.ICO")

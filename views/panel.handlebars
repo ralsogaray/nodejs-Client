@@ -19,12 +19,12 @@
             {{#each peliculas}} <!--PARA RECORRER -->
             <!-- INICIO PELICULA -->
             <tr class="text-center">
-              <td>{{this._id}}</td>
+              <td>{{this._id}}</td> <!--se usa el this en vez de llamar al objeto, por ej: pelicula.titulo -->
               <td>{{this.titulo}}</td>
               <td>{{this.estreno}}</td>
               <td>{{this.genero}}</td>
               <td>
-                <a href="#" class="btn btn-primary">ACTUALIZAR</a>
+                <a href="/panel/actualizar/{{this._id}}" class="btn btn-primary">ACTUALIZAR</a>
                 <button id="#" class="btn btn-danger">ELIMINAR</button>
               </td>
             </tr>
