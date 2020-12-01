@@ -38,6 +38,7 @@ app.get("/test", async (req, res)=>{
     res.end("Mirá la consola a ver si hay datos de la API")
 })
 
+// MOSTRANDO TODAS LAS PELICULAS
 app.get("/panel", async (req, res) => {
     const { data : peliculas } = await axios.get('http://localhost:1000/api/v1/pelicula/') //extraigo data de la peticion
     // extrae data y renombra la variable como "peliculas"
@@ -46,48 +47,78 @@ app.get("/panel", async (req, res) => {
     
     res.render('panel', { titulo : "Catálogo de Películas", peliculas : peliculas }) //en el objeto defino propiedades/valores qde informacion que quiero que ingrese a panel
 })
+//////////////////////////////////
+
 
 app.get("/panel/nueva", (req, res) =>{
-    res.render('formulario', { accion : "Agregar"}) //RENDERIZA EL FORMULARIO DE VIEWS PARA ENVIAR PELICULAS
+    res.render('formulario', { accion : "Agregar", direccion : "/panel/nueva"}) //RENDERIZA EL FORMULARIO DE VIEWS PARA ENVIAR PELICULAS, { accion : "Agregar"} reemplaza a accion en el handlebar
 }) 
 
-app.post("/panel/nueva", async (req, res) => { // POOOOOST 
+// AGREGAR PELICULA
+app.post("/panel/nueva", async (req, res) => {  
     // aca habria que hacer la validacion de datos con "Joi"
-    const { body : datos } = req //EXTRAIGO DE REQUEST BODY Y RENOMBRO LA VARIABLE COMO "datos"
+    const { body : datos } = req //EXTRAIGO DE REQUEST EL BODY Y RENOMBRO LA VARIABLE COMO "datos"
 
-    const { data } = await axios({ //data es la respuesta de dialogar con el servidor. Siempre que haga una operacion con axios se va a extraer la propiedad "data"
-        method : "POST",
-        url : 'http://localhost:1000/api/v1/pelicula/', //direccion a donde mandar el POST
-        data : datos 
-    })
-
-    console.log( data )
-
-    res.end("Mira la consolita!")
+    try{
+        const { data } = await axios({ //data es la respuesta de dialogar con el servidor. Siempre que haga una operacion con axios se va a extraer la propiedad "data"
+            method : "POST",
+            url : 'http://localhost:1000/api/v1/pelicula/', //direccion a donde mandar el POST
+            data : datos 
+        })
+        res.redirect("/panel")
+    } catch(error){
+        res.end("ERROR")
+    }
+    
 })
 
+
+// ACTUALIZAR !!
 app.get("/panel/actualizar/:id", async (req, res) =>{
 
-    const { id } = req.params
+    const { id } = req.params //extraigo el ID para pasarlo a la URL
 
-    
+    try{
+        const { data } = await axios.get(`http://localhost:1000/api/v1/pelicula/${id}`)
 
-    const { data } = await axios.get(`http://localhost:1000/api/v1/pelicula/${id}`)
-
-    console.log(data)
-    if(data.ok){
+        console.log(data) // data devuelve un objeto con "true "y "resultado" que es un array
         
-        const pelicula = data.resultado[0] //dentro de pelicula esta el objeto pelicula con id, titulo, estreno y genero
-        
-        res.render('formulario', {//RENDERIZA EL FORMULARIO DE VIEWS PARA ENVIAR PELICULAS
-            accion : "Actualizar", 
-            ...pelicula}) //destructurador
-    } else{
-        res.redirect("/panel/error") //luego crear una interfaz que diga error
+        if(data.ok){ // es lo mismo que poner data.ok == true
+            
+            const pelicula = data.resultado[0] //dentro de pelicula esta el objeto pelicula con id, titulo, estreno y genero
+            
+            res.render('formulario', {//RENDERIZA EL FORMULARIO DE VIEWS PARA ENVIAR PELICULAS
+                accion : "Actualizar",//{ accion : "Actualizar"} reemplaza a accion en el handlebar
+                direccion : `/panel/actualizar/${id}`,
+                ...pelicula}) //destructurador, rompo el o bjeto y libero las propiedades en variables independientes (_id, titulo, estreno y género)
+        } else{
+            res.redirect("/error") 
+        } 
+    } catch(e){
+        res.end("ERROR GARRAFAL")
     }
+})
 
+app.post( "/panel/actualizar/:id" , async(req, res) =>{ // SILVIO AYUDAAAA!!
+    const { id } = req.params
     
-}) 
+    console.log(id)
+    const { body : datos } = req //extraigo el body de request y lo renombro datos
+    //console.log(datos)
+    try{
+        const { data } = await axios({ //data es la respuesta de dialogar con el servidor. Siempre que haga una operacion con axios se va a extraer la propiedad "data"
+            method : "PUT",
+            url : `http://localhost:1000/api/v1/pelicula/${id}`, //direccion a donde mandar el POST
+            data : datos 
+            })
+
+        return res.end("Mira la consola!")
+    } catch(error) {
+        res.end("ERROR!!")
+    }
+})
+//////////////////////////////////////////
+
 ///////// AXIOS //////////
 
 
@@ -113,9 +144,7 @@ app.get('/:seccion?', (req, res) => { //seccion es como el parametro :id --- al 
     const vista = seccion || 'home' //con esto le digo que si seccion es undefined entonces renderize "home". Vista va a tener el contenido de seccion y si es undefined, el de home
     
     
-
     const titulo = vista.charAt(0).toUpperCase() + vista.slice(1) //agarro la primer letra del string en la posicion 0 y la paso a mayuscula ; con slice corto el texto de seccion a partir de la posicion 1 entonces quedaria "ontacto"
-    
 
     //console.log( titulo )
     

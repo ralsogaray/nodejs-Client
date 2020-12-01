@@ -1,7 +1,7 @@
-<h1 class="text-center my-4">{{accion}} Película</h1>
+<h1 class="text-center my-4">{{accion}} Película</h1> <!-- ACCION SE VA A ACTUALIZAR POR EL CLICK QUE HAGA EN LA ACCION-->
 <section class="row">
 
-  <form class="col-sm-5 mx-auto" action="/{{_id}}" method="POST">
+  <form class="col-sm-5 mx-auto" action="{{direccion}}" method="POST">
     <div class="form-group">
       <label for="title">Titulo</label>
       <input type="text" name="titulo" id="title" class="form-control" value="{{titulo}}">
@@ -14,17 +14,9 @@
       <label for="genero">Genero</label></br>
       <input name="genero" list="genero" class="form-control" value="{{genero}}">
     </div>
-    <datalist id="genre">
-      <option value="Superheroes">
-      <option value="Science Fiction">
-      <option value="Fantasy">
-      <option value="Documentary">
-      <option value="Horror">
-      <option value="Action">
-      <option value="Drama">
-      <option value="Comedy">
-    </datalist>
-    <button class="btn btn-primary" type="submit">{{accion}} película</button>
+    
+    <button class="btn btn-primary" type="submit">{{accion}} película</button> <!-- ACCION SE VA A ACTUALIZAR POR EL CLICK QUE HAGA EN LA ACCION-->
+    <button class="btn btn-primary" type="submit" href="/">Volver</button>
   </form>
 
 </section>
